@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import RegisterPage from '../pages/RegisterPage'; // Hozirgi kodingizni nomi RegisterPage bo'lsin
-import LoginPage from '../pages/LoginPage';       // Yangi yaratadigan sahifangiz
+import LoginPage from '../pages/LoginPage';
+import RegisterPage from '../pages/RegisterPage';
 
 const App = () => {
   return (
-    <Router>
+    // basename loyihangizning GitHub'dagi repozitoriya nomi bilan bir xil bo'lishi kerak
+    <Router basename="/login">
       <Routes>
-        {/* Asosiy sahifa ochilganda avtomatik login'ga yuboradi */}
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<Navigate to="/login-page" />} />
+        <Route path="/login-page" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>

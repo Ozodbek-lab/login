@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import MyInput from '../components/MyInput';
 import MyButton from '../components/MyButton';
+import TelegramLogin from '../components/TelegramLogin';
 
 // Animatsiya linklari
 const ANIMATIONS = {
@@ -17,31 +18,28 @@ const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  const navigate = useNavigate(); // Navigatsiya funksiyasi
+  const navigate = useNavigate();
 
-  // --- Form Handler ---
+  // --- Form Handler (Enter bosilganda ishlaydi) ---
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Sahifa yangilanib ketishini oldini oladi
+    e.preventDefault();
 
     if (!username || !password) {
       alert("Iltimos, barcha maydonlarni to'ldiring!");
       return;
     }
 
-    // 1. Ma'lumotlarni yuborish simulyatsiyasi
     console.log("Ro'yxatdan o'tish ma'lumotlari:", { username, password });
 
-    // 2. Formani tozalash
+    // Formani tozalash va ayiqchani tinchlantirish
     setUsername('');
     setPassword('');
-
-    // 3. Ayiqchani tinch holatga qaytarish
     setActiveStatus('IDLE');
 
     alert("Muvaffaqiyatli ro'yxatdan o'tdingiz!");
   };
 
-  // --- Animation Helper Functions ---
+  // --- Animation Helpers ---
   const getDimension = (status: string) => {
     switch (status) {
       case 'HIDE': return { size: '270px', top: '-55px' };
@@ -78,7 +76,7 @@ const RegisterPage: React.FC = () => {
     <div style={styles.page}>
       <div style={styles.card}>
         
-        {/* Lottie Animatsiya Maydoni */}
+        {/* Ayiqcha Animatsiyasi */}
         <div style={styles.lottieContainer}>
           {renderLottie('IDLE')}
           {renderLottie('TYPING')}
@@ -88,7 +86,6 @@ const RegisterPage: React.FC = () => {
         <h2 style={styles.title}>Ro'yxatdan o'tish</h2>
 
         <form style={styles.form} onSubmit={handleSubmit}>
-          {/* Universal Inputlar */}
           <MyInput
             placeholder="Foydalanuvchi nomi"
             value={username}
@@ -106,11 +103,20 @@ const RegisterPage: React.FC = () => {
             onBlur={() => setActiveStatus('IDLE')}
           />
 
-          {/* Tugmalar guruhi */}
           <div style={styles.buttonGroup}>
             <MyButton type="submit">
               Tasdiqlash
             </MyButton>
+
+            {/* Ajratuvchi 'yoki' qismi */}
+            <div style={styles.dividerContainer}>
+              <div style={styles.line}></div>
+              <span style={styles.dividerText}>yoki</span>
+              <div style={styles.line}></div>
+            </div>
+
+            {/* Telegram orqali kirish */}
+            <TelegramLogin />
 
             <MyButton 
               type="button" 
@@ -126,7 +132,7 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-// --- Stillar (Styles) ---
+// --- Stillar ---
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     display: 'flex',
@@ -181,7 +187,23 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     gap: '12px',
-  }
+  },
+  dividerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '10px 0',
+    gap: '10px',
+  },
+  line: {
+    flex: 1,
+    height: '1px',
+    backgroundColor: '#e2e8f0',
+  },
+  dividerText: {
+    color: '#94a3b8',
+    fontSize: '14px',
+    fontWeight: '500',
+  },
 };
 
 export default RegisterPage;
