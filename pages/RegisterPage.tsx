@@ -5,7 +5,6 @@ import MyInput from '../components/MyInput';
 import MyButton from '../components/MyButton';
 import TelegramLogin from '../components/TelegramLogin';
 
-// Animatsiya linklari
 const ANIMATIONS = {
   IDLE: "https://lottie.host/d2a94c99-9de7-46ae-bdb7-1c5b05f3cfd1/EM5jckEoO5.lottie",
   TYPING: "https://lottie.host/5f994902-e397-462c-9508-7f7594089df0/6jkxkfx43h.lottie",
@@ -13,33 +12,24 @@ const ANIMATIONS = {
 };
 
 const RegisterPage: React.FC = () => {
-  // --- States ---
   const [activeStatus, setActiveStatus] = useState<'IDLE' | 'TYPING' | 'HIDE'>('IDLE');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  
   const navigate = useNavigate();
 
-  // --- Form Handler (Enter bosilganda ishlaydi) ---
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!username || !password) {
       alert("Iltimos, barcha maydonlarni to'ldiring!");
       return;
     }
-
-    console.log("Ro'yxatdan o'tish ma'lumotlari:", { username, password });
-
-    // Formani tozalash va ayiqchani tinchlantirish
+    console.log("Ro'yxatdan o'tish:", { username, password });
     setUsername('');
     setPassword('');
     setActiveStatus('IDLE');
-
     alert("Muvaffaqiyatli ro'yxatdan o'tdingiz!");
   };
 
-  // --- Animation Helpers ---
   const getDimension = (status: string) => {
     switch (status) {
       case 'HIDE': return { size: '270px', top: '-55px' };
@@ -75,8 +65,6 @@ const RegisterPage: React.FC = () => {
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        
-        {/* Ayiqcha Animatsiyasi */}
         <div style={styles.lottieContainer}>
           {renderLottie('IDLE')}
           {renderLottie('TYPING')}
@@ -104,24 +92,22 @@ const RegisterPage: React.FC = () => {
           />
 
           <div style={styles.buttonGroup}>
-            <MyButton type="submit">
-              Tasdiqlash
-            </MyButton>
+            <MyButton type="submit">Tasdiqlash</MyButton>
 
-            {/* Ajratuvchi 'yoki' qismi */}
+            {/* Ikkita tugma orasidagi 'yoki' qismi */}
             <div style={styles.dividerContainer}>
               <div style={styles.line}></div>
               <span style={styles.dividerText}>yoki</span>
               <div style={styles.line}></div>
             </div>
 
-            {/* Telegram orqali kirish */}
+            {/* Telegram Login Vidjeti */}
             <TelegramLogin />
 
             <MyButton 
               type="button" 
               variant="secondary" 
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/login-page')}
             >
               Allaqachon ro'yxatdan o'tganmisiz?
             </MyButton>
@@ -132,7 +118,6 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-// --- Stillar ---
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     display: 'flex',
@@ -164,12 +149,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     pointerEvents: 'none',
-    transition: 'opacity 0.5s ease-in-out, width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
-    willChange: 'width, height, top, opacity',
+    transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
   },
   title: {
     fontSize: '26px',

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import MyInput from '../components/MyInput';
 import MyButton from '../components/MyButton';
+import TelegramLogin from '../components/TelegramLogin';
 
-// Login uchun ham o'sha ayiqcha animatsiyalaridan foydalanamiz
 const ANIMATIONS = {
   IDLE: "https://lottie.host/d2a94c99-9de7-46ae-bdb7-1c5b05f3cfd1/EM5jckEoO5.lottie",
   TYPING: "https://lottie.host/5f994902-e397-462c-9508-7f7594089df0/6jkxkfx43h.lottie",
@@ -12,35 +12,24 @@ const ANIMATIONS = {
 };
 
 const LoginPage: React.FC = () => {
-  // --- States ---
   const [activeStatus, setActiveStatus] = useState<'IDLE' | 'TYPING' | 'HIDE'>('IDLE');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
   const navigate = useNavigate();
 
-  // --- Login Handler ---
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!email || !password) {
-      alert("Iltimos, maydonlarni to'ldiring!");
+      alert("Iltimos, email va parolni kiriting!");
       return;
     }
-
-    // Login mantiqi simulyatsiyasi
-    console.log("Tizimga kirish:", { email, password });
-
-    // Formani tozalash
+    console.log("Kirish amalga oshirildi:", { email, password });
+    // Kirishdan keyin formani tozalash
     setEmail('');
     setPassword('');
     setActiveStatus('IDLE');
-
-    alert("Xush kelibsiz!");
-    // navigate('/dashboard'); // Muvaffaqiyatli kirsa dashboardga yo'naltirish mumkin
   };
 
-  // --- Animation Helpers (RegisterPage bilan bir xil o'lchamlar) ---
   const getDimension = (status: string) => {
     switch (status) {
       case 'HIDE': return { size: '270px', top: '-55px' };
@@ -76,8 +65,6 @@ const LoginPage: React.FC = () => {
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        
-        {/* Ayiqcha Animatsiyasi */}
         <div style={styles.lottieContainer}>
           {renderLottie('IDLE')}
           {renderLottie('TYPING')}
@@ -88,7 +75,7 @@ const LoginPage: React.FC = () => {
 
         <form style={styles.form} onSubmit={handleLogin}>
           <MyInput
-            placeholder="Email manzilingiz"
+            placeholder="Email yoki foydalanuvchi nomi"
             value={email}
             onChange={setEmail}
             onFocus={() => setActiveStatus('TYPING')}
@@ -97,7 +84,7 @@ const LoginPage: React.FC = () => {
           
           <MyInput
             type="password"
-            placeholder="Parolingiz"
+            placeholder="Parol"
             value={password}
             onChange={setPassword}
             onFocus={() => setActiveStatus('HIDE')}
@@ -105,16 +92,23 @@ const LoginPage: React.FC = () => {
           />
 
           <div style={styles.buttonGroup}>
-            <MyButton type="submit">
-              Kirish
-            </MyButton>
+            <MyButton type="submit">Kirish</MyButton>
+
+            <div style={styles.dividerContainer}>
+              <div style={styles.line}></div>
+              <span style={styles.dividerText}>yoki</span>
+              <div style={styles.line}></div>
+            </div>
+
+            {/* Telegram Login Tugmasi */}
+            <TelegramLogin />
 
             <MyButton 
               type="button" 
               variant="secondary" 
               onClick={() => navigate('/register')}
             >
-              Hisobingiz yo'qmi? Ro'yxatdan o'ting
+              Hali ro'yxatdan o'tmaganmisiz?
             </MyButton>
           </div>
         </form>
@@ -123,7 +117,6 @@ const LoginPage: React.FC = () => {
   );
 };
 
-// --- Stillar (Styles) ---
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     display: 'flex',
@@ -155,12 +148,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     pointerEvents: 'none',
-    transition: 'opacity 0.5s ease-in-out, width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
-    willChange: 'width, height, top, opacity',
+    transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
   },
   title: {
     fontSize: '26px',
@@ -178,7 +167,23 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     gap: '12px',
-  }
+  },
+  dividerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '10px 0',
+    gap: '10px',
+  },
+  line: {
+    flex: 1,
+    height: '1px',
+    backgroundColor: '#e2e8f0',
+  },
+  dividerText: {
+    color: '#94a3b8',
+    fontSize: '14px',
+    fontWeight: '500',
+  },
 };
 
 export default LoginPage;
