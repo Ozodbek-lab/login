@@ -1,8 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
+  // React pluginini ulash
   plugins: [react()],
-  base: 'https://Ozodbek-lab.github.io/login/',
+  
+  // GitHub Pages uchun asosiy yo'l (base path)
+  // Repozitoriyingiz nomi 'login' bo'lgani uchun '/login/' deb yoziladi
+  base: '/login/',
+
+  // Build jarayonida chiqadigan papka nomi
+  build: {
+    outDir: 'dist',
+  }
 })
