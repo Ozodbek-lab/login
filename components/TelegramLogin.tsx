@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-// Telegramdan keladigan foydalanuvchi ma'lumotlari turi
+// 1. Foydalanuvchi ma'lumotlari uchun aniq tur
 interface TelegramUser {
   id: number;
   first_name: string;
@@ -11,10 +11,10 @@ interface TelegramUser {
   hash: string;
 }
 
-// Global window obyektiga funksiyani tanitish
+// 2. Window obyektini to'g'ri kengaytirish (any-siz variant)
 declare global {
   interface Window {
-    onTelegramAuth: (user: TelegramUser) => void;
+    onTelegramAuth?: (user: TelegramUser) => void;
   }
 }
 
@@ -22,18 +22,18 @@ const TelegramLogin: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Vidjet ko'payib ketmasligi uchun tozalash
+    // Eski tugmalarni tozalash
     if (containerRef.current) {
       containerRef.current.innerHTML = '';
     }
 
+    // Skript yaratish
     const script = document.createElement('script');
     script.src = "https://telegram.org/js/telegram-widget.js?22";
     script.async = true;
     
-    // SIZNING BOTINGIZNING USERNAMI SHU YERDA:
+    // Botingiz usernami
     script.setAttribute('data-telegram-login', 'my_free_server_bot'); 
-    
     script.setAttribute('data-size', 'large');
     script.setAttribute('data-radius', '15');
     script.setAttribute('data-request-access', 'write');
@@ -41,14 +41,15 @@ const TelegramLogin: React.FC = () => {
 
     containerRef.current?.appendChild(script);
 
-    // Foydalanuvchi tasdiqlaganidan keyin ishlaydigan qism
+    // 3. Callback funksiyasini yuklash (Xatolik shu yerda edi)
     window.onTelegramAuth = (user: TelegramUser) => {
-      console.log("Telegram ma'lumotlari:", user);
+      console.log("Muvaffaqiyatli login:", user);
       alert(`Xush kelibsiz, ${user.first_name}!`);
     };
 
+    // Tozalash mantiqi
     return () => {
-      delete (window as Partial<Window>).onTelegramAuth;
+      window.onTelegramAuth = undefined;
     };
   }, []);
 
@@ -58,8 +59,8 @@ const TelegramLogin: React.FC = () => {
       style={{ 
         display: 'flex', 
         justifyContent: 'center', 
-        minHeight: '40px',
-        margin: '10px 0' 
+        minHeight: '44px', 
+        margin: '15px 0' 
       }} 
     />
   );

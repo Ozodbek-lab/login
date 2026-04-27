@@ -5,6 +5,7 @@ import MyInput from '../components/MyInput';
 import MyButton from '../components/MyButton';
 import TelegramLogin from '../components/TelegramLogin';
 
+// Animatsiya manzillari
 const ANIMATIONS = {
   IDLE: "https://lottie.host/d2a94c99-9de7-46ae-bdb7-1c5b05f3cfd1/EM5jckEoO5.lottie",
   TYPING: "https://lottie.host/5f994902-e397-462c-9508-7f7594089df0/6jkxkfx43h.lottie",
@@ -17,19 +18,26 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // Kirish funksiyasi
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!email || !password) {
       alert("Iltimos, email va parolni kiriting!");
       return;
     }
-    console.log("Kirish amalga oshirildi:", { email, password });
-    // Kirishdan keyin formani tozalash
+
+    console.log("Kirish ma'lumotlari:", { email, password });
+    
+    // Muvaffaqiyatli kirishdan keyin formani tozalash
     setEmail('');
     setPassword('');
     setActiveStatus('IDLE');
+    
+    alert("Tizimga muvaffaqiyatli kirdingiz!");
   };
 
+  // Ayiqchaning o'lchamlarini holatga qarab o'zgartirish
   const getDimension = (status: string) => {
     switch (status) {
       case 'HIDE': return { size: '270px', top: '-55px' };
@@ -39,43 +47,42 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const renderLottie = (status: keyof typeof ANIMATIONS) => {
-    const { size, top } = getDimension(status);
-    return (
-      <div
-        style={{
-          ...styles.lottieLayer,
-          opacity: activeStatus === status ? 1 : 0,
-          visibility: activeStatus === status ? 'visible' : 'hidden',
-          width: size,
-          height: size,
-          top: top,
-        }}
-      >
-        <DotLottieReact 
-          src={ANIMATIONS[status]} 
-          loop 
-          autoplay 
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    );
-  };
-
   return (
     <div style={styles.page}>
       <div style={styles.card}>
+        
+        {/* Lottie Animatsiya qismi */}
         <div style={styles.lottieContainer}>
-          {renderLottie('IDLE')}
-          {renderLottie('TYPING')}
-          {renderLottie('HIDE')}
+          {(Object.keys(ANIMATIONS) as Array<keyof typeof ANIMATIONS>).map((key) => {
+            const { size, top } = getDimension(key);
+            return (
+              <div
+                key={key}
+                style={{
+                  ...styles.lottieLayer,
+                  opacity: activeStatus === key ? 1 : 0,
+                  visibility: activeStatus === key ? 'visible' : 'hidden',
+                  width: size,
+                  height: size,
+                  top: top,
+                }}
+              >
+                <DotLottieReact 
+                  src={ANIMATIONS[key]} 
+                  loop 
+                  autoplay 
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <h2 style={styles.title}>Tizimga kirish</h2>
 
         <form style={styles.form} onSubmit={handleLogin}>
           <MyInput
-            placeholder="Email yoki foydalanuvchi nomi"
+            placeholder="Email manzilingiz"
             value={email}
             onChange={setEmail}
             onFocus={() => setActiveStatus('TYPING')}
@@ -84,7 +91,7 @@ const LoginPage: React.FC = () => {
           
           <MyInput
             type="password"
-            placeholder="Parol"
+            placeholder="Parolingiz"
             value={password}
             onChange={setPassword}
             onFocus={() => setActiveStatus('HIDE')}
@@ -94,13 +101,14 @@ const LoginPage: React.FC = () => {
           <div style={styles.buttonGroup}>
             <MyButton type="submit">Kirish</MyButton>
 
+            {/* Ajratuvchi 'yoki' qismi */}
             <div style={styles.dividerContainer}>
               <div style={styles.line}></div>
               <span style={styles.dividerText}>yoki</span>
               <div style={styles.line}></div>
             </div>
 
-            {/* Telegram Login Tugmasi */}
+            {/* Telegram orqali kirish komponenti */}
             <TelegramLogin />
 
             <MyButton 
@@ -108,7 +116,7 @@ const LoginPage: React.FC = () => {
               variant="secondary" 
               onClick={() => navigate('/register')}
             >
-              Hali ro'yxatdan o'tmaganmisiz?
+              Hisobingiz yo'qmi? Ro'yxatdan o'ting
             </MyButton>
           </div>
         </form>
@@ -117,6 +125,7 @@ const LoginPage: React.FC = () => {
   );
 };
 
+// --- Stillar ---
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     display: 'flex',
@@ -148,8 +157,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     pointerEvents: 'none',
-    transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    transition: 'opacity 0.5s ease-in-out, width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    willChange: 'width, height, top, opacity',
   },
   title: {
     fontSize: '26px',
